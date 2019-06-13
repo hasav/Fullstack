@@ -23,6 +23,28 @@ const Display = ( {text, value}) => {
 
     )
 }
+
+const Statistics = (props) => {
+  const {good, neutral, bad} = props
+  const all = good + neutral + bad
+  if (all < 1) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  } 
+    return (
+      <div>
+        <Display text='good' value={good} />
+        <Display text='neutral' value={neutral} />
+        <Display text='bad' value={bad} />
+        <Display text='all' value={all} />
+        <Display text='average' value={(good - bad)/all} />
+        <Display text='positive' value={100*(good)/all} />
+      </div>
+    )
+}
 const App = () => {
   // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
@@ -36,9 +58,7 @@ const App = () => {
       <Button handleClick={() => setNeutral(neutral +1)} text='neutral'/>
       <Button handleClick={() => setBad(bad +1)} text='bad'/>
       <Header text='statistics' />
-      <Display text='good' value={good} />
-      <Display text='neutral' value={neutral} />
-      <Display text='bad' value={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
 }
