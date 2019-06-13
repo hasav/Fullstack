@@ -35,15 +35,31 @@ const Statistics = (props) => {
     )
   } 
     return (
-      <div>
-        <Display text='good' value={good} />
-        <Display text='neutral' value={neutral} />
-        <Display text='bad' value={bad} />
-        <Display text='all' value={all} />
-        <Display text='average' value={(good - bad)/all} />
-        <Display text='positive' value={100*(good)/all} />
-      </div>
+      <table>
+        <tbody>
+        <Statistic text='good' value={good} />
+        <Statistic text='neutral' value={neutral} />
+        <Statistic text='bad' value={bad} />
+        <Statistic text='all' value={all} />
+        <Statistic text='average' value={(good - bad)/all} />
+        <Statistic text='positive' value={100*(good)/all} />
+        </tbody>
+      </table>
     )
+}
+
+const Statistic = ( {text, value} ) => {
+  return (
+    <tr>
+    <td>
+      {text}
+    </td>
+    <td>
+      {value}
+    </td>
+    </tr>
+  )
+
 }
 const App = () => {
   // tallenna napit omaan tilaansa
