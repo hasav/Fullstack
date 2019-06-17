@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
+import { summarizers } from 'istanbul-lib-report';
 
 const Button = ( {handleClick, text} ) => {
     return (
@@ -10,6 +11,28 @@ const Button = ( {handleClick, text} ) => {
     )
 }
 
+const MostVotes = ( {votes} ) => {
+    let topanec = ""
+    let sum = votes.reduce((a, b) => a + b, 0)
+    if (sum === 0) {
+        topanec = "No votes given yet"
+    }
+    else {
+        let i = votes.indexOf(Math.max(...votes))
+        topanec = anecdotes[i]
+    }
+    return (
+        <div>
+        <h1>
+            Anecdote with most votes
+        </h1>
+        <p>
+            {topanec}
+        </p>
+        </div>
+    )
+}
+
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState([
@@ -17,7 +40,8 @@ const App = (props) => {
   ]
   )
   const handleAnecdoteClick = () => {
-      const num = Math.floor(Math.random() * (+6 - +0)) + +0
+      const num = Math.floor(Math.random() * 6)
+      console.log(num)
       return (
           setSelected(num)
       )
@@ -35,6 +59,7 @@ const App = (props) => {
         <p>has {votes[selected]} votes</p>
         <Button handleClick={handleAnecdoteClick} text='next anecdote' />
         <Button handleClick={handleVoteClick} text='vote' />
+        <MostVotes votes={votes}  /> 
     </div>
   )
 }
