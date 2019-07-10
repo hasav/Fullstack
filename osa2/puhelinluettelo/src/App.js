@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import numberService from './services/numbers'
 
-const Person = ({ name, number }) => {
+const Person = ({ name, number, delFunction }) => {
   return (
     <div>
     {name} {number}
+    <button onClick={delFunction}>delete</button>
     </div>
   )
 }
@@ -28,6 +30,20 @@ const Filter = ( {newFilter, setNewFilter} ) => {
   )
 }
 
+const delFunctionOf = (id, persons, setPersons) => {
+  const person = (persons.find(p=> p.id === id))
+  const result = window.confirm(
+    `Delete '${person.name}'?`
+  )
+  if (result) {
+    numberService
+    .deleteObject(id)
+    .then(response => {
+      setPersons(persons.filter(n => n.id !== id))
+    })
+  }
+}
+
 const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, setPersons} ) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -45,9 +61,13 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
       window.alert(`${newName} is already added to phonebook`)
     }
     else {
-      setPersons(persons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      numberService
+        .create(personObject)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
     }
 
   }
@@ -75,7 +95,7 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
 
 }
 
-const Rows = ( {newFilter, persons} ) => {
+const Rows = ( {newFilter, persons, setPersons} ) => {
   if (newFilter === '') {
     return (
       persons.map(person =>
@@ -83,6 +103,7 @@ const Rows = ( {newFilter, persons} ) => {
         key={person.name}
         name={person.name}
         number={person.number}
+        delFunction={() => delFunctionOf(person.id, persons, setPersons)}
         />)
     )
   }
@@ -106,14 +127,13 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter] = useState('')
+  
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    numberService
+      .getAll('http://localhost:3001/persons')
+      .then(initialNumbers => {
+        setPersons(initialNumbers)
       })
   }, [])
     
@@ -129,7 +149,7 @@ const App = () => {
       persons={persons} setPersons={setPersons} />
       <h2>Numbers</h2>
       <ul>
-        <Rows newFilter={newFilter} persons={persons}/>
+        <Rows newFilter={newFilter} persons={persons} setPersons={setPersons}/>
       </ul>
     </div>
   )
