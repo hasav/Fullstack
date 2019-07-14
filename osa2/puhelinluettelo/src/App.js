@@ -30,7 +30,7 @@ const Filter = ( {newFilter, setNewFilter} ) => {
   )
 }
 
-const delFunctionOf = (id, persons, setPersons) => {
+const delFunctionOf = (id, persons, setPersons, setMessage) => {
   const person = (persons.find(p=> p.id === id))
   const result = window.confirm(
     `Delete '${person.name}'?`
@@ -40,11 +40,15 @@ const delFunctionOf = (id, persons, setPersons) => {
     .deleteObject(id)
     .then(response => {
       setPersons(persons.filter(n => n.id !== id))
+      setMessage(`Deleted ${person.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 2000)
     })
   }
 }
 
-const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, setPersons} ) => {
+const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, setPersons, setMessage} ) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -57,8 +61,23 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
       name: newName,
       number: newNumber
     }
-    if (persons.some(person => person.name === newName)) {
+    if (persons.some(person => person.name === newName && newNumber === "") ) {
       window.alert(`${newName} is already added to phonebook`)
+    }
+    else if (persons.some(person => person.name === newName) ) {
+      const person = (persons.find(p=> p.name === newName))
+      const idOfPerson = person.id
+      numberService
+        .update(idOfPerson, personObject)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== idOfPerson ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setMessage(`Changed number to ${returnedPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 2000)
+        })
     }
     else {
       numberService
@@ -67,6 +86,10 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 2000)
         })
     }
 
@@ -95,7 +118,28 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
 
 }
 
-const Rows = ( {newFilter, persons, setPersons} ) => {
+const Notification = ({ message }) => {
+  const style = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === null || message === '') {
+    return null
+  }
+
+  return (
+    <div style={style}>
+      {message}
+    </div>
+  )
+}
+const Rows = ( {newFilter, persons, setPersons, setMessage} ) => {
   if (newFilter === '') {
     return (
       persons.map(person =>
@@ -103,7 +147,7 @@ const Rows = ( {newFilter, persons, setPersons} ) => {
         key={person.name}
         name={person.name}
         number={person.number}
-        delFunction={() => delFunctionOf(person.id, persons, setPersons)}
+        delFunction={() => delFunctionOf(person.id, persons, setPersons, setMessage)}
         />)
     )
   }
@@ -127,6 +171,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter] = useState('')
+  const [ message, setMessage ] = useState('')
   
 
   useEffect(() => {
@@ -140,16 +185,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <div>
         <h2>add a new</h2>
       </div>
       <PersonForm newName={newName} setNewName={setNewName} 
       newNumber={newNumber} setNewNumber={setNewNumber}
-      persons={persons} setPersons={setPersons} />
+      persons={persons} setPersons={setPersons} setMessage={setMessage}/>
       <h2>Numbers</h2>
       <ul>
-        <Rows newFilter={newFilter} persons={persons} setPersons={setPersons}/>
+        <Rows newFilter={newFilter} persons={persons} setPersons={setPersons} setMessage={setMessage}/>
       </ul>
     </div>
   )
