@@ -153,7 +153,7 @@ const Rows = ( {newFilter, persons, setPersons, setMessage} ) => {
   }
   else {
     console.log(newFilter)
-    let filtered = persons.filter(person => person.name.toLowerCase().startsWith(newFilter))
+    let filtered = persons.filter(person => person.name.toLowerCase().includes(newFilter))
     console.log(filtered)
     return (
       filtered.map(person =>
