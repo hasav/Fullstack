@@ -30,7 +30,7 @@ const Filter = ( {newFilter, setNewFilter} ) => {
   )
 }
 
-const delFunctionOf = (id, persons, setPersons, setMessage) => {
+const delFunctionOf = (id, persons, setPersons, setMessage, setColor) => {
   const person = (persons.find(p=> p.id === id))
   const result = window.confirm(
     `Delete '${person.name}'?`
@@ -40,6 +40,7 @@ const delFunctionOf = (id, persons, setPersons, setMessage) => {
     .deleteObject(id)
     .then(response => {
       setPersons(persons.filter(n => n.id !== id))
+      setColor('green')
       setMessage(`Deleted ${person.name}`)
           setTimeout(() => {
             setMessage(null)
@@ -48,7 +49,7 @@ const delFunctionOf = (id, persons, setPersons, setMessage) => {
   }
 }
 
-const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, setPersons, setMessage} ) => {
+const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, setPersons, setMessage, setColor} ) => {
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -73,6 +74,7 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
           setPersons(persons.map(person => person.id !== idOfPerson ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
+          setColor('green')
           setMessage(`Changed number to ${returnedPerson.name}`)
           setTimeout(() => {
             setMessage(null)
@@ -86,7 +88,17 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setColor('green')
           setMessage(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 2000)
+        })
+        .catch(error => {
+          const errormessage = error.response.data.error
+          console.log(Notification.style)
+          setColor('red')
+          setMessage(errormessage)
           setTimeout(() => {
             setMessage(null)
           }, 2000)
@@ -118,9 +130,9 @@ const PersonForm = ( {newName, setNewName, newNumber, setNewNumber, persons, set
 
 }
 
-const Notification = ({ message }) => {
-  const style = {
-    color: 'green',
+const Notification = ({ message, color }) => {
+  var style = {
+    color: color,
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
@@ -139,7 +151,7 @@ const Notification = ({ message }) => {
     </div>
   )
 }
-const Rows = ( {newFilter, persons, setPersons, setMessage} ) => {
+const Rows = ( {newFilter, persons, setPersons, setMessage, setColor} ) => {
   if (newFilter === '') {
     return (
       persons.map(person =>
@@ -147,7 +159,7 @@ const Rows = ( {newFilter, persons, setPersons, setMessage} ) => {
         key={person.name}
         name={person.name}
         number={person.number}
-        delFunction={() => delFunctionOf(person.id, persons, setPersons, setMessage)}
+        delFunction={() => delFunctionOf(person.id, persons, setPersons, setMessage, setColor)}
         />)
     )
   }
@@ -172,7 +184,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ newFilter, setNewFilter] = useState('')
   const [ message, setMessage ] = useState('')
-  
+  const [ color, setColor ] = useState('green')
 
   useEffect(() => {
     numberService
@@ -185,17 +197,18 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message}/>
+      <Notification message={message} color={color}/>
       <Filter newFilter={newFilter} setNewFilter={setNewFilter} />
       <div>
         <h2>add a new</h2>
       </div>
       <PersonForm newName={newName} setNewName={setNewName} 
       newNumber={newNumber} setNewNumber={setNewNumber}
-      persons={persons} setPersons={setPersons} setMessage={setMessage}/>
+      persons={persons} setPersons={setPersons} setMessage={setMessage}
+      setColor={setColor}/>
       <h2>Numbers</h2>
       <ul>
-        <Rows newFilter={newFilter} persons={persons} setPersons={setPersons} setMessage={setMessage}/>
+        <Rows newFilter={newFilter} persons={persons} setPersons={setPersons} setMessage={setMessage} setColor={setColor}/>
       </ul>
     </div>
   )
