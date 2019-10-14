@@ -13,6 +13,9 @@ const  App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [color, setColor] = useState('green')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -44,7 +47,46 @@ const  App = () => {
 
   }
 
-  
+
+  const handleNewPost = (event) => {
+    event.preventDefault()
+    console.log(title, author, url)
+  }
+  const blogForm = () => (
+    <form onSubmit={handleNewPost}>
+      <div>
+        title:
+        <input
+        type="text"
+        value={title}
+        name="Title"
+        onChange={({ target }) => setTitle(target.value)}
+        /> 
+      </div>
+      <div>
+        author:
+        <input
+        type="text"
+        value={author}
+        name="Author"
+        onChange={({ target }) => setAuthor(target.value)}
+        /> 
+      </div>
+      <div>
+        url:
+        <input
+        type="text"
+        value={url}
+        name="URL"
+        onChange={({ target }) => setUrl(target.value)}
+        /> 
+      </div>
+      <button type="submit">create</button>
+    </form>
+
+  )
+
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -132,6 +174,8 @@ const  App = () => {
       <Notification message={message} />
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={logout}>Logout</button></p>
+      <h2>create new</h2>
+      {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
