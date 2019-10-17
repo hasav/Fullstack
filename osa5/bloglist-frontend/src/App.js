@@ -51,6 +51,16 @@ const  App = () => {
   const handleNewPost = (event) => {
     event.preventDefault()
     console.log(title, author, url)
+    const newBlog = {
+      'title': title,
+      'author':author,
+      'url':url
+    }
+    blogService
+      .create(newBlog)
+      .then(newBlog =>  {
+        setBlogs(blogs.concat(newBlog))
+      }) 
   }
   const blogForm = () => (
     <form onSubmit={handleNewPost}>
