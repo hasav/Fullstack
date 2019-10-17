@@ -39,7 +39,7 @@ const  App = () => {
       
     } catch (exception) {
       setColor('red')
-      setMessage('wrong credentials')
+      setMessage('wrong username or password')
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -48,19 +48,28 @@ const  App = () => {
   }
 
 
-  const handleNewPost = (event) => {
+  const handleNewPost = async (event) => {
     event.preventDefault()
-    console.log(title, author, url)
     const newBlog = {
       'title': title,
       'author':author,
       'url':url
     }
-    blogService
-      .create(newBlog)
-      .then(newBlog =>  {
-        setBlogs(blogs.concat(newBlog))
-      }) 
+    try {
+      const blog = await blogService.create(newBlog)
+      setBlogs(blogs.concat(blog))
+      setColor('green')
+      setMessage(`a new blog ${title} by ${author} added`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setColor('red')
+      setMessage('adding new blog failed')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
   }
   const blogForm = () => (
     <form onSubmit={handleNewPost}>
