@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import loginService from './services/login'
 import blogService from './services/blogs'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 
 
@@ -16,6 +19,8 @@ const  App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const blogFormRef = React.createRef()
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -56,8 +61,12 @@ const  App = () => {
       'url':url
     }
     try {
+      blogFormRef.current.toggleVisibility()
       const blog = await blogService.create(newBlog)
       setBlogs(blogs.concat(blog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
       setColor('green')
       setMessage(`a new blog ${title} by ${author} added`)
       setTimeout(() => {
@@ -72,62 +81,28 @@ const  App = () => {
     }
   }
   const blogForm = () => (
-    <form onSubmit={handleNewPost}>
-      <div>
-        title:
-        <input
-        type="text"
-        value={title}
-        name="Title"
-        onChange={({ target }) => setTitle(target.value)}
-        /> 
-      </div>
-      <div>
-        author:
-        <input
-        type="text"
-        value={author}
-        name="Author"
-        onChange={({ target }) => setAuthor(target.value)}
-        /> 
-      </div>
-      <div>
-        url:
-        <input
-        type="text"
-        value={url}
-        name="URL"
-        onChange={({ target }) => setUrl(target.value)}
-        /> 
-      </div>
-      <button type="submit">create</button>
-    </form>
-
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <BlogForm
+      title={title}
+      author={author}
+      url={url}
+      handleTitleChange={({ target }) => setTitle(target.value)}
+      handleAuthorChange={({ target }) => setAuthor(target.value)}
+      handleURLChange={({ target }) => setUrl(target.value)}
+      handleSubmit={handleNewPost}
+      />
+    </Togglable>
   )
 
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-          <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-          <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>      
+  const loginForm = () => (     
+    <LoginForm
+    username={username}
+    password={password}
+    handleUsernameChange={({ target }) => setUsername(target.value)}
+    handlePasswordChange={({ target }) => setPassword(target.value)}
+    handleSubmit={handleLogin}
+  />  
   )
 
   const Notification = ({ message }) => {
