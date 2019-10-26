@@ -147,6 +147,7 @@ const  App = () => {
     blogService
       .getAll()
       .then(initialBlogs => {
+        initialBlogs.sort((a, b) => (a.likes > b.likes) ? -1 : 1)
         setBlogs(initialBlogs)
       })
   }, [])
@@ -171,7 +172,7 @@ const  App = () => {
       <h2>create new</h2>
       {blogForm()}
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user}/>
       )}
     </div>
   )

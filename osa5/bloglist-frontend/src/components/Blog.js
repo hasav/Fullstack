@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [moreInfo, setMoreInfo] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -20,10 +19,11 @@ const Blog = ({ blog }) => {
           <p>{blog.title}</p>
         </div>
           <a href={blog.url}>{blog.url}</a>
-          <p>{likes} likes
+          <p>{blog.likes} likes
           <button onClick={likePost}>like</button>
           </p>
           <p>added by {blog.author}</p>
+          {renderRemove()}
 
       </div>
       )
@@ -43,18 +43,42 @@ const Blog = ({ blog }) => {
     const blogId = blog.id
     const newBlog = {
       'user': blog.user ? blog.user.id : null,
-      'likes': likes +1,
+      'likes': blog.likes +1,
       'author': blog.author,
       'title': blog.title,
       'url': blog.url
     }
     try {
       const returnedBlog = await blogService.update(newBlog, blogId)
-      blog.likes = returnedBlog.likes
-      setLikes(returnedBlog.likes)
+      const removedList = blogs.filter(b => b.id !== blog.id)
+      const index = blogs.findIndex(b => b.id === blog.id)
+      removedList.splice(index, 0, returnedBlog)
+      setBlogs(removedList)
+      
     }
     catch {
       console.log('something went wrong')
+    }
+    
+  }
+
+  const removePost = async () => {
+    const blogId = blog.id
+    try {
+      const ret = await blogService.delete(blogId)
+    }
+    catch {
+      console.log('something went wrong')
+    }
+  }
+
+  const renderRemove = () => {
+    if (blog.user && blog.user.username === user.username) {
+      return (
+        <div>
+          <button onClick={() => console.log(blog.user)}>remove</button>
+        </div>
+      )
     }
   }
 
