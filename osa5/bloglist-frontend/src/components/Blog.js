@@ -13,10 +13,12 @@ const Blog = ({ blog }) => {
     if (moreInfo) {
       return (
       <div>
+        <div onClick={toggleInfo}>
           <p>{blog.title}</p>
+        </div>
           <a href={blog.url}>{blog.url}</a>
           <p>{blog.likes} likes
-          <button onClick={console.log("click")}>like</button>
+          <button onClick={() => console.log("click")}>like</button>
           </p>
           <p>added by {blog.author}</p>
 
@@ -24,7 +26,7 @@ const Blog = ({ blog }) => {
       )
     }
     return (
-      <div>
+      <div onClick={toggleInfo}>
         {blog.title} {blog.author}
       </div>
     )
@@ -35,9 +37,7 @@ const Blog = ({ blog }) => {
   }
   return (
     <div style={blogStyle}> 
-      <div onClick={toggleInfo}>
-        {returnInfo()}
-      </div>
+      {returnInfo()}
   </div>
 )}
 
