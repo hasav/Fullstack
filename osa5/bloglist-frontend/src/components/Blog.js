@@ -65,7 +65,9 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   const removePost = async () => {
     const blogId = blog.id
     try {
-      const ret = await blogService.delete(blogId)
+      const ret = await blogService.remove(blogId)
+      const removedList = blogs.filter(b => b.id !== blog.id)
+      setBlogs(removedList)
     }
     catch {
       console.log('something went wrong')
@@ -76,7 +78,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     if (blog.user && blog.user.username === user.username) {
       return (
         <div>
-          <button onClick={() => console.log(blog.user)}>remove</button>
+          <button onClick={removePost}>remove</button>
         </div>
       )
     }
