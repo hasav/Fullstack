@@ -75,7 +75,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   const renderRemove = () => {
-    if (blog.user && blog.user.username === user.username) {
+    if (blog.user && blog.user.username && blog.user.username === user.username) {
       return (
         <div>
           <button onClick={removePost}>remove</button>
