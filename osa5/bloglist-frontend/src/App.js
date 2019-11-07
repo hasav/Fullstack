@@ -37,11 +37,11 @@ const  App = () => {
       setUsername('')
       setPassword('')
       setColor('green')
-      setMessage(`Login successful!`)
+      setMessage('Login successful!')
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-      
+
     } catch (exception) {
       setColor('red')
       setMessage('wrong username or password')
@@ -95,14 +95,14 @@ const  App = () => {
   )
 
 
-  const loginForm = () => (     
+  const loginForm = () => (
     <LoginForm
     username={username}
     password={password}
     handleUsernameChange={({ target }) => setUsername(target.value)}
     handlePasswordChange={({ target }) => setPassword(target.value)}
     handleSubmit={handleLogin}
-  />  
+  />
   )
 
   const Notification = ({ message }) => {
@@ -133,7 +133,7 @@ const  App = () => {
   }
 
   useEffect(() => {
-    
+
     const loggedUserJSON =  window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -177,4 +177,4 @@ const  App = () => {
     </div>
   )
 }
-export default App;
+export default App

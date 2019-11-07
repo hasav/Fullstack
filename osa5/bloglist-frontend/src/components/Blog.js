@@ -10,7 +10,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   const returnInfo = () => {
     if (moreInfo) {
       return (
@@ -54,12 +54,12 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
       const index = blogs.findIndex(b => b.id === blog.id)
       removedList.splice(index, 0, returnedBlog)
       setBlogs(removedList)
-      
+
     }
     catch {
       console.log('something went wrong')
     }
-    
+
   }
 
   const removePost = async () => {
@@ -85,7 +85,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   return (
-    <div style={blogStyle}> 
+    <div style={blogStyle}>
       {returnInfo()}
   </div>
 )}
