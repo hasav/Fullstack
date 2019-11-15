@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import loginService from './services/login'
 import blogService from './services/blogs'
-import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
-
+import { useField } from './hooks'
 
 
 const  App = () => {
 
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
@@ -25,17 +24,21 @@ const  App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login({
-        username, password
-      })
+      const credentials = {
+        username: username.value,
+        password: password.value
+      }
+      const user = await loginService.login(
+        credentials
+      )
 
       window.localStorage.setItem(
         'loggedBlogAppUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
       setColor('green')
       setMessage('Login successful!')
       setTimeout(() => {
@@ -43,6 +46,8 @@ const  App = () => {
       }, 5000)
 
     } catch (exception) {
+      username.reset()
+      password.reset()
       setColor('red')
       setMessage('wrong username or password')
       setTimeout(() => {
@@ -96,13 +101,17 @@ const  App = () => {
 
 
   const loginForm = () => (
-    <LoginForm
-    username={username}
-    password={password}
-    handleUsernameChange={({ target }) => setUsername(target.value)}
-    handlePasswordChange={({ target }) => setPassword(target.value)}
-    handleSubmit={handleLogin}
-  />
+    <div>
+      <form onSubmit={handleLogin}>
+        username:
+        <input  {...username} />
+        <br/>
+        password:
+        <input {...password} />
+        <br />
+        <button type="submit">login</button>
+      </form>
+    </div>
   )
 
   const Notification = ({ message }) => {
