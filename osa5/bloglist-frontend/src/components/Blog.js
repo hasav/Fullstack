@@ -65,7 +65,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   const removePost = async () => {
     const blogId = blog.id
     try {
-      const ret = await blogService.remove(blogId)
+      await blogService.remove(blogId)
       const removedList = blogs.filter(b => b.id !== blog.id)
       setBlogs(removedList)
     }

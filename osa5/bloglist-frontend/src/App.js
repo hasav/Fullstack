@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import loginService from './services/login'
 import blogService from './services/blogs'
-import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
 
@@ -11,15 +10,20 @@ const  App = () => {
 
   const username = useField('text')
   const password = useField('password')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
   const [color, setColor] = useState('green')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const blogFormRef = React.createRef()
+
+  const removeReset = (hook) => {
+    let { reset, ...rest } = hook
+    return rest
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -61,19 +65,19 @@ const  App = () => {
   const handleNewPost = async (event) => {
     event.preventDefault()
     const newBlog = {
-      'title': title,
-      'author':author,
-      'url':url
+      'title': title.value,
+      'author': author.value,
+      'url': url.value
     }
     try {
       blogFormRef.current.toggleVisibility()
       const blog = await blogService.create(newBlog)
       setBlogs(blogs.concat(blog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      title.reset()
+      author.reset()
+      url.reset()
       setColor('green')
-      setMessage(`a new blog ${title} by ${author} added`)
+      setMessage(`a new blog ${title.value} by ${author.value} added`)
       setTimeout(() => {
         setMessage(null)
       }, 5000)
@@ -87,15 +91,20 @@ const  App = () => {
   }
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <BlogForm
-      title={title}
-      author={author}
-      url={url}
-      handleTitleChange={({ target }) => setTitle(target.value)}
-      handleAuthorChange={({ target }) => setAuthor(target.value)}
-      handleURLChange={({ target }) => setUrl(target.value)}
-      handleSubmit={handleNewPost}
-      />
+      <div>
+        <form onSubmit={handleNewPost}>
+          title:
+          <input {...removeReset(title)} />
+          <br />
+          author:
+          <input {...removeReset(author)} />
+          <br />
+          url:
+          <input {...removeReset(url)} />
+          <br />
+          <button type="submit">create</button>
+        </form>
+      </div>
     </Togglable>
   )
 
@@ -104,10 +113,10 @@ const  App = () => {
     <div>
       <form onSubmit={handleLogin}>
         username:
-        <input  {...username} />
+        <input  {...removeReset(username)} />
         <br/>
         password:
-        <input {...password} />
+        <input {...removeReset(password)} />
         <br />
         <button type="submit">login</button>
       </form>

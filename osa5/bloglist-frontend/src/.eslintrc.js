@@ -19,6 +19,7 @@ module.exports = {
         "react", "jest"
     ],
     "rules": {
+        "react-hooks/rules-of-hooks": "error",
         "space": [
             "error",
             2
