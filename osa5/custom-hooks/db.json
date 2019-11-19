@@ -21,68 +21,12 @@
       "id": 5
     },
     {
-      "content": "neljäz",
+      "content": "New note should be visible",
       "id": 6
     },
     {
-      "content": "viidez",
+      "content": "Another new note",
       "id": 7
-    },
-    {
-      "content": "monez",
-      "id": 8
-    },
-    {
-      "content": "jokuiz",
-      "id": 9
-    },
-    {
-      "content": "jers",
-      "id": 10
-    },
-    {
-      "content": "wgaag",
-      "id": 11
-    },
-    {
-      "content": "wqgwq",
-      "id": 12
-    },
-    {
-      "content": "wgqgw",
-      "id": 13
-    },
-    {
-      "content": "wag",
-      "id": 14
-    },
-    {
-      "content": "wffw",
-      "id": 15
-    },
-    {
-      "content": "wqgwgq",
-      "id": 16
-    },
-    {
-      "content": "wgqwgq",
-      "id": 17
-    },
-    {
-      "content": "qweqgw",
-      "id": 18
-    },
-    {
-      "content": "ege",
-      "id": 19
-    },
-    {
-      "content": "wafwfa",
-      "id": 20
-    },
-    {
-      "content": "rjjrkj",
-      "id": 21
     }
   ],
   "persons": [
@@ -90,6 +34,16 @@
       "name": "mluukkai",
       "number": "040-5483923",
       "id": 1
+    },
+    {
+      "name": "P.Person",
+      "number": "020-241553",
+      "id": 2
+    },
+    {
+      "name": "Second Person",
+      "number": "424-1253153",
+      "id": 3
     }
   ]
 }

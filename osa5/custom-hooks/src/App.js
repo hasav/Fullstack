@@ -31,7 +31,7 @@ const useResource = (baseUrl) => {
   }
 
   const service = {
-    create,
+    create
     
   }
 
@@ -47,7 +47,7 @@ const App = () => {
 
   const [notes, noteService] = useResource('http://localhost:3005/notes')
   const [persons, personService] = useResource('http://localhost:3005/persons')
-  
+
   const handleNoteSubmit = (event) => {
     event.preventDefault()
     noteService.create({ content: content.value })
@@ -58,7 +58,6 @@ const App = () => {
     personService.create({ name: name.value, number: number.value})
   }
 
-  
   return (
     <div>
       <h2>notes</h2>
