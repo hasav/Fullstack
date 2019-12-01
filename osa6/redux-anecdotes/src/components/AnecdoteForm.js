@@ -14,7 +14,7 @@ const NewAnecdote = ({ store }) => {
             setNotification(`you added '${content}'`)
             )
         setTimeout(() => {
-            store.dispatch(setNotification(null))
+            store.dispatch(setNotification(''))
               }, 5000)
     }
 
