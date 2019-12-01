@@ -1,5 +1,6 @@
 import React from 'react'
 import { createAnecdote } from '../reducers/anecdoteReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const NewAnecdote = ({ store }) => {
     const addAnecdote = (event) => {
@@ -9,6 +10,12 @@ const NewAnecdote = ({ store }) => {
         store.dispatch(
             createAnecdote(content)
         )
+        store.dispatch(
+            setNotification(`you added '${content}'`)
+            )
+        setTimeout(() => {
+            store.dispatch(setNotification(null))
+              }, 5000)
     }
 
     return (
