@@ -17,18 +17,27 @@ const anecdoteReducer = (state = [], action) => {
       return [...state, action.data]
       
     case 'INIT_ANECDOTES':
-      return action.data
+      return action.data.sort((a, b) => (a.votes > b.votes) ? -1 : 1)
     default:
       return state
   }
 }
 
-export const voteAnecdote = (id) => {
-  return {
-    type: 'VOTE',
-    data: { id }
+export const voteAnecdote = (id, anecdotes) => {
+  return async dispatch => {
+    const anecdoteToChange = anecdotes.find(a => a.id === id)
+    const votedAnecdote = {
+      ...anecdoteToChange,
+      votes: anecdoteToChange.votes +1
+    }
+    await anecdoteService.update(votedAnecdote, id)
+    dispatch({
+      type: 'VOTE',
+      data: { id }
+    })
   }
 }
+
 
 export const createAnecdote = content => {
   return async dispatch => {
