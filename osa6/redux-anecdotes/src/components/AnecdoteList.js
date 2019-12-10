@@ -7,10 +7,7 @@ const AnecdoteList = (props) => {
 
     const votingAction = (anecdote, visibleAnecdotes) => {
         props.voteAnecdote(anecdote.id, visibleAnecdotes)
-        props.setNotification(`you voted '${anecdote.content}'`)
-        setTimeout(() => {
-            props.setNotification((''))
-          }, 5000)
+        props.setNotification(`you voted '${anecdote.content}'`, 10)
     }
     return (
         <ul>
