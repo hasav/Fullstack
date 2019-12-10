@@ -22,4 +22,4 @@ const App = (props) => {
   )
 }
 
-export default connect(null, {initializeAnecdotes })(App)
+export default connect(null, { initializeAnecdotes })(App)
