@@ -4,6 +4,7 @@ import loginService from './services/login'
 import blogService from './services/blogs'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
+import { Container, Table } from 'semantic-ui-react'
 
 
 const  App = () => {
@@ -182,16 +183,24 @@ const  App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <Notification message={message} />
       <h2>blogs</h2>
       <p>{user.name} logged in <button onClick={logout}>Logout</button></p>
       <h2>create new</h2>
       {blogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user}/>
-      )}
-    </div>
+      <Table striped celled>
+        <Table.Body>
+          {blogs.map(blog =>
+            <Table.Row key={blog.id}>
+              <Table.Cell>
+              <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user}/>
+              </Table.Cell>
+            </Table.Row>
+          )}
+          </Table.Body>
+      </Table>
+    </Container>
   )
 }
 export default App

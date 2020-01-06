@@ -85,7 +85,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div>
       {returnInfo()}
   </div>
 )}
